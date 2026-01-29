@@ -4,12 +4,12 @@ A markdown-like syntax for generating ASCII art UI mockups with AI.
 
 ## Why?
 
-LLMs work best with text. This syntax lets you describe UI screens in a few lines and get consistent ASCII art output. No image generation, no design tools—just text in, text out.
+LLMs work best with text. This syntax lets you describe UI screens in a few lines and get consistent ASCII art output. No image generation, no design tools—just text in, text out. It also solves the "hallucination" problem of image generators by giving the LLM a rigid, text-based framework to follow.
 
 ## Usage
 
 1. Download [ascii-mockup-llm.txt](ascii-mockup-llm.txt)
-2. Attach it to your AI chat
+2. Attach it to your AI chat (Claude, ChatGPT, etc.)
 3. Write your mockup using the syntax below
 4. Get ASCII art output
 
@@ -27,35 +27,36 @@ LLMs work best with text. This syntax lets you describe UI screens in a few line
 [Forgot Password?]
 ```
 
-**Output:**
+**Output (borderless, default):**
 ```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║  ┃ Login                                                 ║
-║                                                          ║
-║  Email *                                                 ║
-║  [__________________________________________________]    ║
-║                                                          ║
-║  Password *                                              ║
-║  [__________________________________________________]    ║
-║                                                          ║
-║  ╔════════════╗                                          ║
-║  ║  Login     ║                                          ║
-║  ╚════════════╝                                          ║
-║                                                          ║
-║  Forgot Password?                                        ║
-║  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                                        ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
+┃ Login
+
+Email *
+[__________________________________________________]
+
+Password *
+[__________________________________________________]
+
+╔════════════╗
+║  Login     ║
+╚════════════╝
+
+Forgot Password?
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 ```
+
+Borderless output uses ~5x fewer tokens. Add "with borders" to your prompt for framed output.
 
 ## Syntax Reference
 
 ### Screen Border
 ```
-(default)    Double border ╔═══╗
+(default)    No border (saves ~5x tokens)
 |-|          Single border ┌───┐
+|=|          Double border ╔═══╗
 ```
+
+Use "draw with borders" in your prompt when framed output is needed.
 
 ### Headings
 ```
@@ -133,11 +134,11 @@ Column modifiers:
 - `- <Btn>` — Button column (no header)  
 - `Col - [url]` — Values are links
 
-
 ## Example Prompt
 
 Once you attach the reference file to your AI chat, you can write prompts like this:
 
+**Without borders (default, ~5x less tokens):**
 ```
 Draw this screen:
 
@@ -149,8 +150,38 @@ Draw this screen:
 ##Paginator##
 ```
 
-The AI will generate:
+Output:
+```
+┃ User Management
 
+Search Users
+[__________________________________________________]
+
+┌───┬────────────┬──────────────────┬────────┬────────┐
+│   │ Name       │ Email            │ Status │        │
+├───┼────────────┼──────────────────┼────────┼────────┤
+│[ ]│            │ ______________   │        │<Edit>  │
+│   │            │ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾   │        │<Delete>│
+├───┼────────────┼──────────────────┼────────┼────────┤
+│[ ]│            │ ______________   │        │<Edit>  │
+│   │            │ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾   │        │<Delete>│
+└───┴────────────┴──────────────────┴────────┴────────┘
+<<  <  [1]  2  3  >  >>
+```
+
+**With borders (for formal output):**
+```
+Draw this screen with borders:
+
+# User Management
+
+> Search Users
+
+| - [ ] | Name | Email - [user?id=] | Status | - <Edit><Delete> |
+##Paginator##
+```
+
+Output:
 ```
 ╔══════════════════════════════════════════════════════════╗
 ║                                                          ║
